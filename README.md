@@ -3,18 +3,16 @@
 ## Installation ##
 
     # install the library:
-    go get github.com/Nitron/go-cgminer-api
+    go get github.com/crypt0train/go-cgminer-api
 
     // Use in your .go code:
     import (
-        "github.com/Nitron/go-cgminer-api"
+        "github.com/crypt0train/go-cgminer-api"
     )
 
 ## API Documentation ##
 
-Full godoc output from the latest code in master is available here:
-
-http://godoc.org/github.com/Nitron/go-cgminer-api
+Not yet.
 
 ## Quickstart ##
 
@@ -22,20 +20,19 @@ http://godoc.org/github.com/Nitron/go-cgminer-api
 package main
 
 import (
-    "github.com/Nitron/go-cgminer-api"
+    "github.com/crypt0train/go-cgminer-api"
     "log"
 )
 
 func main() {
-    miner := cgminer.New("localhost", 4028)
-    summary, err := miner.Summary()
-    if err != nil {
-        log.Fatalln("Unable to connect to CGMiner: ", err)
-    }
-
-    // Convert hashrate into KH/s
-    hashrate := summary.MHSav * 1000.0
-
-    log.Printf("Average Hashrate: %f KH/s\n", hashrate)
+    miner := cgminer.New("localhost", 4028, 2)
+	stats, err := miner.Stats()
+	if err != nil {
+		log.Println("Unable to connect to CGMiner: ", err)
+		return
+	}
+	fmt.Printf("%s | %s | temp: %d, %d, %d | GHS avg: %0.2f | fan: %d, %d | %s\n",
+		stats.Type, ip, stats.Temp2_6, stats.Temp2_7, stats.Temp2_8, stats.GhsAverage,
+		stats.Fan3, stats.Fan6, stats.CompileTime)
 }
 ```
