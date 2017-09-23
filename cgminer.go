@@ -2,15 +2,18 @@ package cgminer
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"strings"
+	"time"
 )
 
 type CGMiner struct {
-	server string
+	server  string
+	timeout time.Duration
 }
 
 type status struct {
@@ -18,6 +21,246 @@ type status struct {
 	Description string
 	Status      string `json:"STATUS"`
 	When        int64
+}
+
+// Stats - get stats from antminer S9
+type Stats struct {
+	// "miner_id": "81680d4162b51111",
+	MinerID string `json:"miner_id"`
+	// "Type": "Antminer S9",
+	Type string `json:"Type"`
+	// "CompileTime": "Tue Aug 15 11:37:49 CST 2017",
+	CompileTime string `json:"CompileTime"`
+	// "Miner": "16.8.1.3",
+	Miner string `json:"Miner"`
+	// "BMMiner": "2.0.0"
+	BMMiner string `json:"BMMiner"`
+	// "miner_version": "16.8.1.3",
+	MinerVersion string `json:"miner_version"`
+	// "miner_count": 3,
+	MinerCount int16 `json:"miner_count"`
+
+	// "Elapsed": 1434,
+	Elapsed int64 `json:"Elapsed"`
+	// "Wait": 0.0,
+	// "Device Hardware%": 0.0,
+	// "STATS": 0,
+	// "Max": 0.0,
+	// "no_matching_work": 2,
+	// "ID": "BC50",
+	// "Calls": 0,
+	// "Min": 99999999.0,
+
+	// "total_acn": 189,
+	TotalAcn int16 `json:"total_acn"`
+	// "total_rate": 13709.27,
+	TotalRate float32 `json:"total_rate"`
+	// "total_rateideal": 13501.4,
+	TotalRateIdeal float32 `json:"total_rateideal"`
+	// "total_freqavg": 633.38,
+	TotalFrequencyAvg float32 `json:"total_freqavg"`
+
+	// "frequency": "643",
+	Frequency string `json:"frequency"`
+	// "freq_avg1": 0.0,
+	// "freq_avg2": 0.0,
+	// "freq_avg3": 0.0,
+	// "freq_avg4": 0.0,
+	// "freq_avg5": 0.0,
+	// "freq_avg6": 633.47,
+	FrequencyAvg6 float32 `json:"freq_avg6"`
+	// "freq_avg7": 632.53,
+	FrequencyAvg7 float32 `json:"freq_avg7"`
+	// "freq_avg8": 634.14,
+	FrequencyAvg8 float32 `json:"freq_avg8"`
+	// "freq_avg9": 0.0,
+	// "freq_avg12": 0.0,
+	// "freq_avg13": 0.0,
+	// "freq_avg10": 0.0,
+	// "freq_avg11": 0.0,
+	// "freq_avg16": 0.0,
+	// "freq_avg14": 0.0,
+	// "freq_avg15": 0.0,
+
+	// "fan_num": 2,
+	FunNum int16 `json:"fun_num"`
+	// "fan1": 0,
+	// "fan3": 4200,
+	Fan3 int16 `json:"fan3"`
+	// "fan2": 0,
+	// "fan5": 0,
+	// "fan4": 0,
+	// "fan7": 0,
+	// "fan6": 6000,
+	Fan6 int16 `json:"fan6"`
+	// "fan8": 0,
+
+	// "temp_max": 68,
+	TempMax int16 `json:"temp_max"`
+	// "temp_num": 3,
+	TempNum int16 `json:"temp_num"`
+	// "temp1": 0,
+	// "temp2": 0,
+	// "temp3": 0,
+	// "temp4": 0,
+	// "temp5": 0,
+	// "temp6": 68,
+	Temp6 int16 `json:"temp6"`
+	// "temp7": 62,
+	Temp7 int16 `json:"temp7"`
+	// "temp8": 61,
+	Temp8 int16 `json:"temp8"`
+	// "temp9": 0,
+	// "temp10": 0,
+	// "temp11": 0,
+	// "temp12": 0,
+	// "temp13": 0,
+	// "temp14": 0,
+	// "temp15": 0,
+	// "temp16": 0,
+	// "temp2_1": 0,
+	// "temp2_2": 0,
+	// "temp2_3": 0,
+	// "temp2_4": 0,
+	// "temp2_5": 0,
+	// "temp2_6": 83,
+	Temp2_6 int16 `json:"temp2_6"`
+	// "temp2_7": 77,
+	Temp2_7 int16 `json:"temp2_7"`
+	// "temp2_8": 76,
+	Temp2_8 int16 `json:"temp2_8"`
+	// "temp2_9": 0,
+	// "temp2_10": 0,
+	// "temp2_11": 0,
+	// "temp2_12": 0,
+	// "temp2_13": 0,
+	// "temp2_14": 0,
+	// "temp2_15": 0,
+	// "temp2_16": 0,
+	// "temp3_1": 0,
+	// "temp3_2": 0,
+	// "temp3_3": 0,
+	// "temp3_4": 0,
+	// "temp3_5": 0,
+	// "temp3_6": 0,
+	// "temp3_7": 0,
+	// "temp3_9": 0,
+	// "temp3_8": 0,
+	// "temp3_10": 0,
+	// "temp3_11": 0,
+	// "temp3_12": 0,
+	// "temp3_13": 0,
+	// "temp3_14": 0,
+	// "temp3_15": 0,
+	// "temp3_16": 0,
+
+	// "GHS 5s": "13709.27",
+	Ghs5s string `json:"GHS 5s"`
+	// "GHS av": 13681.36,
+	GhsAverage float32 `json:"GHS av"`
+
+	// "chain_hw1": 0,
+	// "chain_hw2": 0,
+	// "chain_hw3": 0,
+	// "chain_hw4": 0,
+	// "chain_hw5": 0,
+	// "chain_hw6": 0,
+	// "chain_hw7": 2,
+	// "chain_hw8": 0,
+	// "chain_hw9": 0,
+	// "chain_hw10": 0,
+	// "chain_hw11": 0,
+	// "chain_hw12": 0,
+	// "chain_hw13": 0,
+	// "chain_hw14": 0,
+	// "chain_hw15": 0,
+	// "chain_hw16": 0,
+
+	// "chain_acs1": "",
+	// "chain_acs2": "",
+	// "chain_acs3": "",
+	// "chain_acs4": "",
+	// "chain_acs5": "",
+	// "chain_acs6": " oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo ooooooo",
+	ChainAcs6 string `json:"chain_acs6"`
+	// "chain_acs7": " oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo ooooooo",
+	ChainAcs7 string `json:"chain_acs7"`
+	// "chain_acs8": " oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo ooooooo",
+	ChainAcs8 string `json:"chain_acs8"`
+	// "chain_acs9": "",
+	// "chain_acs10": "",
+	// "chain_acs11": "",
+	// "chain_acs12": "",
+	// "chain_acs13": "",
+	// "chain_acs14": "",
+	// "chain_acs15": "",
+	// "chain_acs16": "",
+
+	// "chain_acn1": 0,
+	// "chain_acn2": 0,
+	// "chain_acn3": 0,
+	// "chain_acn4": 0,
+	// "chain_acn6": 63,
+	// "chain_acn5": 0,
+	// "chain_acn7": 63,
+	// "chain_acn8": 63,
+	// "chain_acn9": 0,
+	// "chain_acn10": 0,
+	// "chain_acn11": 0,
+	// "chain_acn12": 0,
+	// "chain_acn13": 0,
+	// "chain_acn14": 0,
+	// "chain_acn15": 0,
+	// "chain_acn16": 0,
+
+	// "chain_rate1": "",
+	// "chain_rate2": "",
+	// "chain_rate3": "",
+	// "chain_rate4": "",
+	// "chain_rate5": "",
+	// "chain_rate6": "4554.34",
+	ChainRate6 string `json:"chain_rate6"`
+	// "chain_rate7": "4573.79",
+	ChainRate7 string `json:"chain_rate7"`
+	// "chain_rate8": "4581.14",
+	ChainRate8 string `json:"chain_rate8"`
+	// "chain_rate9": "",
+	// "chain_rate10": "",
+	// "chain_rate11": "",
+	// "chain_rate12": "",
+	// "chain_rate13": "",
+	// "chain_rate14": "",
+	// "chain_rate15": "",
+	// "chain_rate16": "",
+
+	// "chain_rateideal1": 0.0,
+	// "chain_rateideal2": 0.0,
+	// "chain_rateideal3": 0.0,
+	// "chain_rateideal4": 0.0,
+	// "chain_rateideal5": 0.0,
+	// "chain_rateideal6": 4500.16,
+	// "chain_rateideal7": 4500.72,
+	// "chain_rateideal8": 4500.5,
+	// "chain_rateideal9": 0.0,
+	// "chain_rateideal10": 0.0,
+	// "chain_rateideal11": 0.0,
+	// "chain_rateideal12": 0.0,
+	// "chain_rateideal13": 0.0,
+	// "chain_rateideal14": 0.0,
+	// "chain_rateideal15": 0.0,
+	// "chain_rateideal16": 0.0,
+
+	// "chain_opencore_6": "1",
+	// "chain_opencore_7": "1",
+	// "chain_opencore_8": "1"
+
+	// "chain_offside_6": "0",
+	// "chain_offside_7": "0",
+	// "chain_offside_8": "0",
+
+	// "chain_xtime6": "{}",
+	// "chain_xtime7": "{}",
+	// "chain_xtime8": "{}",
 }
 
 type Summary struct {
@@ -49,34 +292,34 @@ type Summary struct {
 }
 
 type Devs struct {
-	GPU                    int64
-	Enabled                string
-	Status                 string
-	Temperature            float64
-	FanSpeed               int     `json:"Fan Speed"`
-	FanPercent             int64   `json:"Fan Percent"`
-	GPUClock               int64   `json:"GPU Clock"`
-	MemoryClock            int64   `json:"Memory Clock"`
-	GPUVoltage            float64 `json:"GPU Voltage"`
-	Powertune              int64
-	MHSav                  float64 `json:"MHS av"`
-	MHS5s                  float64 `json:"MHS 5s"`
-	Accepted               int64
-	Rejected               int64
-	HardwareErrors         int64   `json:"Hardware Errors"`
-	Utility                float64
-	Intensity              string
-	LastSharePool          int64   `json:"Last Share Pool"`
-	LashShareTime          int64   `json:"Lash Share Time"`
-	TotalMH                float64 `json:"TotalMH"`
-	Diff1Work              int64   `json:"Diff1 Work"`
-	DifficultyAccepted     float64 `json:"Difficulty Accepted"`
-	DifficultyRejected     float64 `json:"Difficulty Rejected"`
-	LastShareDifficulty    float64 `json:"Last Share Difficulty"`
-	LastValidWork          int64   `json:"Last Valid Work"`
-	DeviceHardware         float64 `json:"Device Hardware%"`
-	DeviceRejected         float64 `json:"Device Rejected%"`
-	DeviceElapsed          int64   `json:"Device Elapsed"`
+	GPU                 int64
+	Enabled             string
+	Status              string
+	Temperature         float64
+	FanSpeed            int     `json:"Fan Speed"`
+	FanPercent          int64   `json:"Fan Percent"`
+	GPUClock            int64   `json:"GPU Clock"`
+	MemoryClock         int64   `json:"Memory Clock"`
+	GPUVoltage          float64 `json:"GPU Voltage"`
+	Powertune           int64
+	MHSav               float64 `json:"MHS av"`
+	MHS5s               float64 `json:"MHS 5s"`
+	Accepted            int64
+	Rejected            int64
+	HardwareErrors      int64 `json:"Hardware Errors"`
+	Utility             float64
+	Intensity           string
+	LastSharePool       int64   `json:"Last Share Pool"`
+	LashShareTime       int64   `json:"Lash Share Time"`
+	TotalMH             float64 `json:"TotalMH"`
+	Diff1Work           int64   `json:"Diff1 Work"`
+	DifficultyAccepted  float64 `json:"Difficulty Accepted"`
+	DifficultyRejected  float64 `json:"Difficulty Rejected"`
+	LastShareDifficulty float64 `json:"Last Share Difficulty"`
+	LastValidWork       int64   `json:"Last Valid Work"`
+	DeviceHardware      float64 `json:"Device Hardware%"`
+	DeviceRejected      float64 `json:"Device Rejected%"`
+	DeviceElapsed       int64   `json:"Device Elapsed"`
 }
 
 type Pool struct {
@@ -112,6 +355,12 @@ type Pool struct {
 	Works                  int64
 }
 
+type statsResponse struct {
+	Status []status `json:"STATUS"`
+	Stats  []Stats  `json:"STATS"`
+	Id     int64    `json:"id"`
+}
+
 type summaryResponse struct {
 	Status  []status  `json:"STATUS"`
 	Summary []Summary `json:"SUMMARY"`
@@ -119,9 +368,9 @@ type summaryResponse struct {
 }
 
 type devsResponse struct {
-	Status  []status  `json:"STATUS"`
-	Devs    []Devs    `json:"DEVS"`
-	Id      int64     `json:"id"`
+	Status []status `json:"STATUS"`
+	Devs   []Devs   `json:"DEVS"`
+	Id     int64    `json:"id"`
 }
 
 type poolsResponse struct {
@@ -137,16 +386,15 @@ type addPoolResponse struct {
 
 // New returns a CGMiner pointer, which is used to communicate with a running
 // CGMiner instance. Note that New does not attempt to connect to the miner.
-func New(hostname string, port int64) *CGMiner {
+func New(hostname string, port int64, timeout int) *CGMiner {
 	miner := new(CGMiner)
-	server := fmt.Sprintf("%s:%d", hostname, port)
-	miner.server = server
-
+	miner.server = fmt.Sprintf("%s:%d", hostname, port)
+	miner.timeout = time.Second * time.Duration(timeout)
 	return miner
 }
 
 func (miner *CGMiner) runCommand(command, argument string) (string, error) {
-	conn, err := net.Dial("tcp", miner.server)
+	conn, err := net.DialTimeout("tcp", miner.server, miner.timeout)
 	if err != nil {
 		return "", err
 	}
@@ -214,6 +462,24 @@ func (miner *CGMiner) Summary() (*Summary, error) {
 
 	var summary = summaryResponse.Summary[0]
 	return &summary, err
+}
+
+// Stats returns basic information on the miner. See the Stats struct.
+func (miner *CGMiner) Stats() (*Stats, error) {
+	result, err := miner.runCommand("stats", "")
+	if err != nil {
+		return nil, err
+	}
+
+	var statsResponse statsResponse
+	// fix incorrect json response from miner "}{"
+	fixResponse := bytes.Replace([]byte(result), []byte("}{"), []byte(","), 1)
+	err = json.Unmarshal(fixResponse, &statsResponse)
+	if err != nil {
+		return nil, err
+	}
+	var stats = statsResponse.Stats[0]
+	return &stats, nil
 }
 
 // Pools returns a slice of Pool structs, one per pool.
