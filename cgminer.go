@@ -61,7 +61,7 @@ type Stats struct {
 	TotalFrequencyAvg float32 `json:"total_freqavg"`
 
 	// "frequency": "643",
-	Frequency string `json:"frequency"`
+	Frequency float32 `json:"frequency,string"`
 	// "freq_avg1": 0.0,
 	// "freq_avg2": 0.0,
 	// "freq_avg3": 0.0,
@@ -155,7 +155,7 @@ type Stats struct {
 	// "temp3_16": 0,
 
 	// "GHS 5s": "13709.27",
-	Ghs5s string `json:"GHS 5s"`
+	Ghs5s float32 `json:"GHS 5s,string"`
 	// "GHS av": 13681.36,
 	GhsAverage float32 `json:"GHS av"`
 
@@ -219,11 +219,11 @@ type Stats struct {
 	// "chain_rate4": "",
 	// "chain_rate5": "",
 	// "chain_rate6": "4554.34",
-	ChainRate6 string `json:"chain_rate6"`
+	ChainRate6 float32 `json:"chain_rate6,string"`
 	// "chain_rate7": "4573.79",
-	ChainRate7 string `json:"chain_rate7"`
+	ChainRate7 float32 `json:"chain_rate7,string"`
 	// "chain_rate8": "4581.14",
-	ChainRate8 string `json:"chain_rate8"`
+	ChainRate8 float32 `json:"chain_rate8,string"`
 	// "chain_rate9": "",
 	// "chain_rate10": "",
 	// "chain_rate11": "",
@@ -322,6 +322,39 @@ type Devs struct {
 	DeviceElapsed       int64   `json:"Device Elapsed"`
 }
 
+/*
+       "Stratum Active": false,
+       "Difficulty Accepted": 0.0,
+       "Pool Rejected%": 100.0,
+       "Difficulty Rejected": 4096.0,
+       "Diff1 Shares": 0,
+       "Status": "Alive",
+       "Proxy Type": "",
+       "Best Share": 0,
+       "Pool Stale%": 0.0,
+       "Quota": 1,
+       "Rejected": 2,
+       "Stratum URL": "",
+       "Proxy": "",
+       "Long Poll": "N",
+       "Accepted": 0,
+       "User": "cryptotrain.133",
+       "Get Failures": 0,
+       "Difficulty Stale": 0.0,
+       "URL": "stratum+tcp://s1.theblocksfactory.com:9001",
+       "Discarded": 0,
+       "Has Stratum": true,
+       "Last Share Time": "0",
+       "Stale": 0,
+       "POOL": 2,
+       "Priority": 2,
+       "Getworks": 1,
+       "Has GBT": false,
+       "Last Share Difficulty": 0.0,
+       "Diff": "2.05K",
+       "Remote Failures": 0
+   }
+*/
 type Pool struct {
 	Accepted               int64
 	BestShare              int64   `json:"Best Share"`
@@ -335,7 +368,7 @@ type Pool struct {
 	HasGBT                 bool    `json:"Has GBT"`
 	HasStratum             bool    `json:"Has Stratum"`
 	LastShareDifficulty    float64 `json:"Last Share Difficulty"`
-	LastShareTime          int64   `json:"Last Share Time"`
+	LastShareTime          string  `json:"Last Share Time"`
 	LongPoll               string  `json:"Long Poll"`
 	Pool                   int64   `json:"POOL"`
 	PoolRejectedPercentage float64 `json:"Pool Rejected%"`
@@ -350,8 +383,8 @@ type Pool struct {
 	Status                 string
 	StratumActive          bool   `json:"Stratum Active"`
 	StratumURL             string `json:"Stratum URL"`
-	URL                    string
-	User                   string
+	URL                    string `json:"URL"`
+	User                   string `json:"User"`
 	Works                  int64
 }
 
