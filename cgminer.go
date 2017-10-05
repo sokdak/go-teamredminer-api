@@ -25,16 +25,15 @@ type status struct {
 }
 
 // CGfloat32 is a float32 type with own unmarshaller to fix empty JSON string values
-type CGfloat32 struct {
-	float32
-}
+type CGfloat32 float32
 
 // UnmarshalJSON for Antpool json timestamp format: 2006-01-02 15:04:05
 func (a *CGfloat32) UnmarshalJSON(b []byte) (err error) {
 	s := string(b)
 	s = s[1 : len(s)-1]
+
 	if len(s) == 0 {
-		a.float32 = 0
+		*a = 0
 		return
 	}
 	value, err := strconv.ParseFloat(s, 32)
@@ -42,7 +41,7 @@ func (a *CGfloat32) UnmarshalJSON(b []byte) (err error) {
 		msg := fmt.Sprintf("json: failed to unmarshal \"%s\" into float32", s)
 		return errors.New(msg)
 	}
-	a.float32 = float32(value)
+	*a = CGfloat32(value)
 	return
 }
 
@@ -84,7 +83,7 @@ type Stats struct {
 	TotalFrequencyAvg float32 `json:"total_freqavg"`
 
 	// "frequency": "643",
-	Frequency CGfloat32 `json:"frequency,string"`
+	Frequency CGfloat32 `json:"frequency"`
 	// "freq_avg1": 0.0,
 	// "freq_avg2": 0.0,
 	// "freq_avg3": 0.0,
@@ -178,7 +177,7 @@ type Stats struct {
 	// "temp3_16": 0,
 
 	// "GHS 5s": "13709.27",
-	Ghs5s CGfloat32 `json:"GHS 5s,string"`
+	Ghs5s CGfloat32 `json:"GHS 5s"`
 	// "GHS av": 13681.36,
 	GhsAverage CGfloat32 `json:"GHS av"`
 
@@ -242,11 +241,11 @@ type Stats struct {
 	// "chain_rate4": "",
 	// "chain_rate5": "",
 	// "chain_rate6": "4554.34",
-	ChainRate6 CGfloat32 `json:"chain_rate6,omitempty,string"`
+	ChainRate6 CGfloat32 `json:"chain_rate6,omitempty"`
 	// "chain_rate7": "4573.79",
-	ChainRate7 CGfloat32 `json:"chain_rate7,omitempty,string"`
+	ChainRate7 CGfloat32 `json:"chain_rate7,omitempty"`
 	// "chain_rate8": "4581.14",
-	ChainRate8 CGfloat32 `json:"chain_rate8,omitempty,string"`
+	ChainRate8 CGfloat32 `json:"chain_rate8,omitempty"`
 	// "chain_rate9": "",
 	// "chain_rate10": "",
 	// "chain_rate11": "",
