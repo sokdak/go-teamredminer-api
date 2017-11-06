@@ -11,7 +11,7 @@ import (
 // For now they're more of just a convenient scratch area for manual testing.
 
 func Test_Summary(t *testing.T) {
-	miner := New("127.0.0.1", 4028)
+	miner := New("127.0.0.1", 4028, 2)
 	summary, err := miner.Summary()
 	if err != nil {
 		t.Error(err)
@@ -25,7 +25,7 @@ func Test_Summary(t *testing.T) {
 }
 
 func Test_Devs(t *testing.T) {
-	miner := New("127.0.0.1", 4028)
+	miner := New("127.0.0.1", 4028, 2)
 	devs, err := miner.Devs()
 	if err != nil {
 		t.Error(err)
@@ -41,7 +41,7 @@ func Test_Devs(t *testing.T) {
 }
 
 func Test_Pools(t *testing.T) {
-	miner := New("127.0.0.1", 4028)
+	miner := New("127.0.0.1", 4028, 2)
 	pools, err := miner.Pools()
 	if err != nil {
 		t.Error(err)

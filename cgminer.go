@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -22,27 +21,6 @@ type status struct {
 	Description string
 	Status      string `json:"STATUS"`
 	When        int64
-}
-
-// CGfloat32 is a float32 type with own unmarshaller to fix empty JSON string values
-type CGfloat32 float32
-
-// UnmarshalJSON for Antpool json timestamp format: 2006-01-02 15:04:05
-func (a *CGfloat32) UnmarshalJSON(b []byte) (err error) {
-	s := string(b)
-	s = s[1 : len(s)-1]
-
-	if len(s) == 0 {
-		*a = 0
-		return
-	}
-	value, err := strconv.ParseFloat(s, 32)
-	if err != nil {
-		msg := fmt.Sprintf("json: failed to unmarshal \"%s\" into float32", s)
-		return errors.New(msg)
-	}
-	*a = CGfloat32(value)
-	return
 }
 
 // Stats - get stats from antminer S9
@@ -83,18 +61,18 @@ type Stats struct {
 	TotalFrequencyAvg float32 `json:"total_freqavg"`
 
 	// "frequency": "643",
-	Frequency CGfloat32 `json:"frequency"`
+	Frequency float32 `json:"frequency,string"`
 	// "freq_avg1": 0.0,
 	// "freq_avg2": 0.0,
 	// "freq_avg3": 0.0,
 	// "freq_avg4": 0.0,
 	// "freq_avg5": 0.0,
 	// "freq_avg6": 633.47,
-	FrequencyAvg6 CGfloat32 `json:"freq_avg6"`
+	FrequencyAvg6 float32 `json:"freq_avg6"`
 	// "freq_avg7": 632.53,
-	FrequencyAvg7 CGfloat32 `json:"freq_avg7"`
+	FrequencyAvg7 float32 `json:"freq_avg7"`
 	// "freq_avg8": 634.14,
-	FrequencyAvg8 CGfloat32 `json:"freq_avg8"`
+	FrequencyAvg8 float32 `json:"freq_avg8"`
 	// "freq_avg9": 0.0,
 	// "freq_avg12": 0.0,
 	// "freq_avg13": 0.0,
@@ -127,11 +105,11 @@ type Stats struct {
 	// "temp4": 0,
 	// "temp5": 0,
 	// "temp6": 68,
-	Temp6 int16 `json:"temp6,omitempty"`
+	Temp6 int16 `json:"temp6"`
 	// "temp7": 62,
-	Temp7 int16 `json:"temp7,omitempty"`
+	Temp7 int16 `json:"temp7"`
 	// "temp8": 61,
-	Temp8 int16 `json:"temp8,omitempty"`
+	Temp8 int16 `json:"temp8"`
 	// "temp9": 0,
 	// "temp10": 0,
 	// "temp11": 0,
@@ -146,11 +124,11 @@ type Stats struct {
 	// "temp2_4": 0,
 	// "temp2_5": 0,
 	// "temp2_6": 83,
-	Temp2_6 int16 `json:"temp2_6,omitempty"`
+	Temp2_6 int16 `json:"temp2_6"`
 	// "temp2_7": 77,
-	Temp2_7 int16 `json:"temp2_7,omitempty"`
+	Temp2_7 int16 `json:"temp2_7"`
 	// "temp2_8": 76,
-	Temp2_8 int16 `json:"temp2_8,omitempty"`
+	Temp2_8 int16 `json:"temp2_8"`
 	// "temp2_9": 0,
 	// "temp2_10": 0,
 	// "temp2_11": 0,
@@ -177,9 +155,9 @@ type Stats struct {
 	// "temp3_16": 0,
 
 	// "GHS 5s": "13709.27",
-	Ghs5s CGfloat32 `json:"GHS 5s"`
+	Ghs5s json.Number `json:"GHS 5s"`
 	// "GHS av": 13681.36,
-	GhsAverage CGfloat32 `json:"GHS av"`
+	GhsAverage json.Number `json:"GHS av"`
 
 	// "chain_hw1": 0,
 	// "chain_hw2": 0,
@@ -241,11 +219,11 @@ type Stats struct {
 	// "chain_rate4": "",
 	// "chain_rate5": "",
 	// "chain_rate6": "4554.34",
-	ChainRate6 CGfloat32 `json:"chain_rate6,omitempty"`
+	ChainRate6 json.Number `json:"chain_rate6"`
 	// "chain_rate7": "4573.79",
-	ChainRate7 CGfloat32 `json:"chain_rate7,omitempty"`
+	ChainRate7 json.Number `json:"chain_rate7"`
 	// "chain_rate8": "4581.14",
-	ChainRate8 CGfloat32 `json:"chain_rate8,omitempty"`
+	ChainRate8 json.Number `json:"chain_rate8"`
 	// "chain_rate9": "",
 	// "chain_rate10": "",
 	// "chain_rate11": "",
@@ -261,8 +239,11 @@ type Stats struct {
 	// "chain_rateideal4": 0.0,
 	// "chain_rateideal5": 0.0,
 	// "chain_rateideal6": 4500.16,
+	ChainRateIdeal6 float32 `json:"chain_rateideal6"`
 	// "chain_rateideal7": 4500.72,
+	ChainRateIdeal7 float32 `json:"chain_rateideal7"`
 	// "chain_rateideal8": 4500.5,
+	ChainRateIdeal8 float32 `json:"chain_rateideal8"`
 	// "chain_rateideal9": 0.0,
 	// "chain_rateideal10": 0.0,
 	// "chain_rateideal11": 0.0,
@@ -532,6 +513,9 @@ func (miner *CGMiner) Stats() (*Stats, error) {
 	err = json.Unmarshal(fixResponse, &statsResponse)
 	if err != nil {
 		return nil, err
+	}
+	if len(statsResponse.Stats) < 1 {
+		return nil, errors.New("no stats in JSON response")
 	}
 	var stats = statsResponse.Stats[0]
 	return &stats, nil
