@@ -3,6 +3,7 @@ package cgminer
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,21 +23,25 @@ func (miner *CGMiner) checkStatus(statuses []Status) error {
 	return nil
 }
 
-func (miner *CGMiner) runCommand(command, argument string) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", miner.server, miner.timeout)
-	if err != nil {
-		return nil, err
-	}
+func (miner *CGMiner) connect() (net.Conn, error) {
+	return net.DialTimeout("tcp", miner.server, miner.timeout)
+}
+
+func (miner *CGMiner) connectContext(ctx context.Context) (net.Conn, error) {
+	dial := net.Dialer{Timeout: miner.timeout}
+	return dial.DialContext(ctx, "tcp", miner.server)
+}
+
+func (miner *CGMiner) sendCommand(conn net.Conn, command, argument string) ([]byte, error) {
 	defer conn.Close()
 	conn.SetDeadline(time.Now().Add(miner.timeout))
-
 	request := &commandRequest{
 		Command:   command,
 		Parameter: argument,
 	}
 
 	requestBody, _ := json.Marshal(request)
-	_, err = conn.Write(requestBody)
+	_, err := conn.Write(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +50,22 @@ func (miner *CGMiner) runCommand(command, argument string) ([]byte, error) {
 		return nil, err
 	}
 	return bytes.TrimRight(result, "\x00"), nil
+}
+
+func (miner *CGMiner) commandCtx(ctx context.Context, command, argument string) ([]byte, error) {
+	conn, err := miner.connectContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return miner.sendCommand(conn, command, argument)
+}
+
+func (miner *CGMiner) runCommand(command, argument string) ([]byte, error) {
+	conn, err := miner.connect()
+	if err != nil {
+		return nil, err
+	}
+	return miner.sendCommand(conn, command, argument)
 }
 
 // Devs returns basic information on the miner. See the Devs struct.
@@ -67,7 +88,12 @@ func (miner *CGMiner) Devs() (*[]Devs, error) {
 
 // Summary returns basic information on the miner. See the Summary struct.
 func (miner *CGMiner) Summary() (*Summary, error) {
-	result, err := miner.runCommand("summary", "")
+	return miner.SummaryContext(context.Background())
+}
+
+// SummaryContext returns basic information on the miner. See the Summary struct.
+func (miner *CGMiner) SummaryContext(ctx context.Context) (*Summary, error) {
+	result, err := miner.commandCtx(ctx, "summary", "")
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +117,12 @@ func (miner *CGMiner) Summary() (*Summary, error) {
 
 // Stats returns basic information on the miner. See the Stats struct.
 func (miner *CGMiner) Stats() (Stats, error) {
-	result, err := miner.runCommand("stats", "")
+	return miner.StatsContext(context.Background())
+}
+
+// StatsContext returns basic information on the miner. See the Stats struct.
+func (miner *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
+	result, err := miner.commandCtx(ctx, "stats", "")
 	if err != nil {
 		return nil, err
 	}
@@ -115,9 +146,9 @@ func (miner *CGMiner) Stats() (Stats, error) {
 	return &resp.Stats[0], nil
 }
 
-// Pools returns a slice of Pool structs, one per pool.
-func (miner *CGMiner) Pools() ([]Pool, error) {
-	result, err := miner.runCommand("pools", "")
+// PoolsContext returns a slice of Pool structs, one per pool.
+func (miner *CGMiner) PoolsContext(ctx context.Context) ([]Pool, error) {
+	result, err := miner.commandCtx(ctx, "pools", "")
 	if err != nil {
 		return nil, err
 	}
@@ -131,6 +162,11 @@ func (miner *CGMiner) Pools() ([]Pool, error) {
 		return nil, err
 	}
 	return resp.Pools, nil
+}
+
+// Pools returns a slice of Pool structs, one per pool.
+func (miner *CGMiner) Pools() ([]Pool, error) {
+	return miner.PoolsContext(context.Background())
 }
 
 // AddPool adds the given URL/username/password combination to the miner's
