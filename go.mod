@@ -1,4 +1,4 @@
-module github.com/crypt0train/go-cgminer-api
+module github.com/x1unix/go-cgminer-api
 
 go 1.14
 

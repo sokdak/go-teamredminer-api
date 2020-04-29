@@ -1,13 +1,24 @@
 # CGMiner API for Go #
 
+This package is a fork or [crypt0train/go-cgminer-api](https://github.com/crypt0train/go-cgminer-api)
+which wasn't updated since 2018.
+
+This repo contains some fixes and improvements like:
+
+* Go module support
+* [JSON number literal fix](https://github.com/golang/go/issues/34472) for Go 1.14
+* Context-based requests (like `CGMiner.SummaryContext()`, etc)
+* etc
+ 
+ 
 ## Installation ##
 
     # install the library:
-    go get github.com/crypt0train/go-cgminer-api
+    go get github.com/x1unix/go-cgminer-api
 
     // Use in your .go code:
     import (
-        cgminer "github.com/crypt0train/go-cgminer-api"
+        cgminer "github.com/x1unix/go-cgminer-api"
     )
 
 ## API Documentation ##
@@ -35,7 +46,7 @@ Test coverage now: 58.4% of statements
 package main
 
 import (
-    cgminer "github.com/crypt0train/go-cgminer-api"
+    cgminer "github.com/x1unix/go-cgminer-api"
     "log"
 )
 
