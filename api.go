@@ -52,7 +52,8 @@ func (miner *CGMiner) sendCommand(conn net.Conn, command, argument string) ([]by
 	return bytes.TrimRight(result, "\x00"), nil
 }
 
-func (miner *CGMiner) commandCtx(ctx context.Context, command, argument string) ([]byte, error) {
+// Call sends raw request and returns raw response
+func (miner *CGMiner) Call(ctx context.Context, command, argument string) ([]byte, error) {
 	conn, err := miner.connectContext(ctx)
 	if err != nil {
 		return nil, err
@@ -93,7 +94,7 @@ func (miner *CGMiner) Summary() (*Summary, error) {
 
 // SummaryContext returns basic information on the miner. See the Summary struct.
 func (miner *CGMiner) SummaryContext(ctx context.Context) (*Summary, error) {
-	result, err := miner.commandCtx(ctx, "summary", "")
+	result, err := miner.Call(ctx, "summary", "")
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +123,7 @@ func (miner *CGMiner) Stats() (Stats, error) {
 
 // StatsContext returns basic information on the miner. See the Stats struct.
 func (miner *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
-	result, err := miner.commandCtx(ctx, "stats", "")
+	result, err := miner.Call(ctx, "stats", "")
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +149,7 @@ func (miner *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
 
 // PoolsContext returns a slice of Pool structs, one per pool.
 func (miner *CGMiner) PoolsContext(ctx context.Context) ([]Pool, error) {
-	result, err := miner.commandCtx(ctx, "pools", "")
+	result, err := miner.Call(ctx, "pools", "")
 	if err != nil {
 		return nil, err
 	}
@@ -169,13 +170,13 @@ func (miner *CGMiner) Pools() ([]Pool, error) {
 	return miner.PoolsContext(context.Background())
 }
 
-// AddPool adds the given URL/username/password combination to the miner's
+// AddPoolCtx adds the given URL/username/password combination to the miner's
 // pool list.
-func (miner *CGMiner) AddPool(url, username, password string) error {
+func (miner *CGMiner) AddPoolCtx(ctx context.Context, url, username, password string) error {
 	// TODO: Don't allow adding a pool that's already in the pool list
 	// TODO: Escape commas in the URL, username, and password
 	parameter := fmt.Sprintf("%s,%s,%s", url, username, password)
-	result, err := miner.runCommand("addpool", parameter)
+	result, err := miner.Call(ctx, "addpool", parameter)
 	if err != nil {
 		return err
 	}
@@ -189,6 +190,12 @@ func (miner *CGMiner) AddPool(url, username, password string) error {
 		return err
 	}
 	return nil
+}
+
+// AddPool adds the given URL/username/password combination to the miner's
+// pool list.
+func (miner *CGMiner) AddPool(url, username, password string) error {
+	return miner.AddPoolCtx(context.Background(), url, username, password)
 }
 
 func (miner *CGMiner) Enable(pool *Pool) error {
