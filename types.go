@@ -1,7 +1,6 @@
 package cgminer
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -205,88 +204,88 @@ type GenericStats struct {
 	ChainAcn14 int         `json:"chain_acn14"`
 	ChainAcn15 int         `json:"chain_acn15"`
 	ChainAcn16 int         `json:"chain_acn16"`
-	// json.Number because we cannot parse empty string "" to float
+	// Number because we cannot parse empty string "" to float
 	// S9(), D3() and other interface methods will correct represent this value as float32
-	ChainRate1       json.Number `json:"chain_rate1"`
-	ChainRate2       json.Number `json:"chain_rate2"`
-	ChainRate3       json.Number `json:"chain_rate3"`
-	ChainRate4       json.Number `json:"chain_rate4"`
-	ChainRate5       json.Number `json:"chain_rate5"`
-	ChainRate6       json.Number `json:"chain_rate6"`
-	ChainRate7       json.Number `json:"chain_rate7"`
-	ChainRate8       json.Number `json:"chain_rate8"`
-	ChainRate9       json.Number `json:"chain_rate9"`
-	ChainRate10      json.Number `json:"chain_rate10"`
-	ChainRate11      json.Number `json:"chain_rate11"`
-	ChainRate12      json.Number `json:"chain_rate12"`
-	ChainRate13      json.Number `json:"chain_rate13"`
-	ChainRate14      json.Number `json:"chain_rate14"`
-	ChainRate15      json.Number `json:"chain_rate15"`
-	ChainRate16      json.Number `json:"chain_rate16"`
-	ChainRateIdeal1  float32     `json:"chain_rateideal1"`
-	ChainRateIdeal2  float32     `json:"chain_rateideal2"`
-	ChainRateIdeal3  float32     `json:"chain_rateideal3"`
-	ChainRateIdeal4  float32     `json:"chain_rateideal4"`
-	ChainRateIdeal5  float32     `json:"chain_rateideal5"`
-	ChainRateIdeal6  float32     `json:"chain_rateideal6"`
-	ChainRateIdeal7  float32     `json:"chain_rateideal7"`
-	ChainRateIdeal8  float32     `json:"chain_rateideal8"`
-	ChainRateIdeal9  float32     `json:"chain_rateideal9"`
-	ChainRateIdeal10 float32     `json:"chain_rateideal10"`
-	ChainRateIdeal11 float32     `json:"chain_rateideal11"`
-	ChainRateIdeal12 float32     `json:"chain_rateideal12"`
-	ChainRateIdeal13 float32     `json:"chain_rateideal13"`
-	ChainRateIdeal14 float32     `json:"chain_rateideal14"`
-	ChainRateIdeal15 float32     `json:"chain_rateideal15"`
-	ChainRateIdeal16 float32     `json:"chain_rateideal16"`
-	ChainOpenCore1   int         `json:"chain_opencore_1,string"`
-	ChainOpenCore2   int         `json:"chain_opencore_2,string"`
-	ChainOpenCore3   int         `json:"chain_opencore_3,string"`
-	ChainOpenCore4   int         `json:"chain_opencore_4,string"`
-	ChainOpenCore5   int         `json:"chain_opencore_5,string"`
-	ChainOpenCore6   int         `json:"chain_opencore_6,string"`
-	ChainOpenCore7   int         `json:"chain_opencore_7,string"`
-	ChainOpenCore8   int         `json:"chain_opencore_8,string"`
-	ChainOpenCore9   int         `json:"chain_opencore_9,string"`
-	ChainOpenCore10  int         `json:"chain_opencore_10,string"`
-	ChainOpenCore11  int         `json:"chain_opencore_11,string"`
-	ChainOpenCore12  int         `json:"chain_opencore_12,string"`
-	ChainOpenCore13  int         `json:"chain_opencore_13,string"`
-	ChainOpenCore14  int         `json:"chain_opencore_14,string"`
-	ChainOpenCore15  int         `json:"chain_opencore_15,string"`
-	ChainOpenCore16  int         `json:"chain_opencore_16,string"`
-	ChainOffside1    int         `json:"chain_offside_1,string"`
-	ChainOffside2    int         `json:"chain_offside_2,string"`
-	ChainOffside3    int         `json:"chain_offside_3,string"`
-	ChainOffside4    int         `json:"chain_offside_4,string"`
-	ChainOffside5    int         `json:"chain_offside_5,string"`
-	ChainOffside6    int         `json:"chain_offside_6,string"`
-	ChainOffside7    int         `json:"chain_offside_7,string"`
-	ChainOffside8    int         `json:"chain_offside_8,string"`
-	ChainOffside9    int         `json:"chain_offside_9,string"`
-	ChainOffside10   int         `json:"chain_offside_10,string"`
-	ChainOffside11   int         `json:"chain_offside_11,string"`
-	ChainOffside12   int         `json:"chain_offside_12,string"`
-	ChainOffside13   int         `json:"chain_offside_13,string"`
-	ChainOffside14   int         `json:"chain_offside_14,string"`
-	ChainOffside15   int         `json:"chain_offside_15,string"`
-	ChainOffside16   int         `json:"chain_offside_16,string"`
-	ChainXtime1      string      `json:"chain_xtime1"`
-	ChainXtime2      string      `json:"chain_xtime2"`
-	ChainXtime3      string      `json:"chain_xtime3"`
-	ChainXtime4      string      `json:"chain_xtime4"`
-	ChainXtime5      string      `json:"chain_xtime5"`
-	ChainXtime6      string      `json:"chain_xtime6"`
-	ChainXtime7      string      `json:"chain_xtime7"`
-	ChainXtime8      string      `json:"chain_xtime8"`
-	ChainXtime9      string      `json:"chain_xtime9"`
-	ChainXtime10     string      `json:"chain_xtime10"`
-	ChainXtime11     string      `json:"chain_xtime11"`
-	ChainXtime12     string      `json:"chain_xtime12"`
-	ChainXtime13     string      `json:"chain_xtime13"`
-	ChainXtime14     string      `json:"chain_xtime14"`
-	ChainXtime15     string      `json:"chain_xtime15"`
-	ChainXtime16     string      `json:"chain_xtime16"`
+	ChainRate1       Number  `json:"chain_rate1"`
+	ChainRate2       Number  `json:"chain_rate2"`
+	ChainRate3       Number  `json:"chain_rate3"`
+	ChainRate4       Number  `json:"chain_rate4"`
+	ChainRate5       Number  `json:"chain_rate5"`
+	ChainRate6       Number  `json:"chain_rate6"`
+	ChainRate7       Number  `json:"chain_rate7"`
+	ChainRate8       Number  `json:"chain_rate8"`
+	ChainRate9       Number  `json:"chain_rate9"`
+	ChainRate10      Number  `json:"chain_rate10"`
+	ChainRate11      Number  `json:"chain_rate11"`
+	ChainRate12      Number  `json:"chain_rate12"`
+	ChainRate13      Number  `json:"chain_rate13"`
+	ChainRate14      Number  `json:"chain_rate14"`
+	ChainRate15      Number  `json:"chain_rate15"`
+	ChainRate16      Number  `json:"chain_rate16"`
+	ChainRateIdeal1  float32 `json:"chain_rateideal1"`
+	ChainRateIdeal2  float32 `json:"chain_rateideal2"`
+	ChainRateIdeal3  float32 `json:"chain_rateideal3"`
+	ChainRateIdeal4  float32 `json:"chain_rateideal4"`
+	ChainRateIdeal5  float32 `json:"chain_rateideal5"`
+	ChainRateIdeal6  float32 `json:"chain_rateideal6"`
+	ChainRateIdeal7  float32 `json:"chain_rateideal7"`
+	ChainRateIdeal8  float32 `json:"chain_rateideal8"`
+	ChainRateIdeal9  float32 `json:"chain_rateideal9"`
+	ChainRateIdeal10 float32 `json:"chain_rateideal10"`
+	ChainRateIdeal11 float32 `json:"chain_rateideal11"`
+	ChainRateIdeal12 float32 `json:"chain_rateideal12"`
+	ChainRateIdeal13 float32 `json:"chain_rateideal13"`
+	ChainRateIdeal14 float32 `json:"chain_rateideal14"`
+	ChainRateIdeal15 float32 `json:"chain_rateideal15"`
+	ChainRateIdeal16 float32 `json:"chain_rateideal16"`
+	ChainOpenCore1   int     `json:"chain_opencore_1,string"`
+	ChainOpenCore2   int     `json:"chain_opencore_2,string"`
+	ChainOpenCore3   int     `json:"chain_opencore_3,string"`
+	ChainOpenCore4   int     `json:"chain_opencore_4,string"`
+	ChainOpenCore5   int     `json:"chain_opencore_5,string"`
+	ChainOpenCore6   int     `json:"chain_opencore_6,string"`
+	ChainOpenCore7   int     `json:"chain_opencore_7,string"`
+	ChainOpenCore8   int     `json:"chain_opencore_8,string"`
+	ChainOpenCore9   int     `json:"chain_opencore_9,string"`
+	ChainOpenCore10  int     `json:"chain_opencore_10,string"`
+	ChainOpenCore11  int     `json:"chain_opencore_11,string"`
+	ChainOpenCore12  int     `json:"chain_opencore_12,string"`
+	ChainOpenCore13  int     `json:"chain_opencore_13,string"`
+	ChainOpenCore14  int     `json:"chain_opencore_14,string"`
+	ChainOpenCore15  int     `json:"chain_opencore_15,string"`
+	ChainOpenCore16  int     `json:"chain_opencore_16,string"`
+	ChainOffside1    int     `json:"chain_offside_1,string"`
+	ChainOffside2    int     `json:"chain_offside_2,string"`
+	ChainOffside3    int     `json:"chain_offside_3,string"`
+	ChainOffside4    int     `json:"chain_offside_4,string"`
+	ChainOffside5    int     `json:"chain_offside_5,string"`
+	ChainOffside6    int     `json:"chain_offside_6,string"`
+	ChainOffside7    int     `json:"chain_offside_7,string"`
+	ChainOffside8    int     `json:"chain_offside_8,string"`
+	ChainOffside9    int     `json:"chain_offside_9,string"`
+	ChainOffside10   int     `json:"chain_offside_10,string"`
+	ChainOffside11   int     `json:"chain_offside_11,string"`
+	ChainOffside12   int     `json:"chain_offside_12,string"`
+	ChainOffside13   int     `json:"chain_offside_13,string"`
+	ChainOffside14   int     `json:"chain_offside_14,string"`
+	ChainOffside15   int     `json:"chain_offside_15,string"`
+	ChainOffside16   int     `json:"chain_offside_16,string"`
+	ChainXtime1      string  `json:"chain_xtime1"`
+	ChainXtime2      string  `json:"chain_xtime2"`
+	ChainXtime3      string  `json:"chain_xtime3"`
+	ChainXtime4      string  `json:"chain_xtime4"`
+	ChainXtime5      string  `json:"chain_xtime5"`
+	ChainXtime6      string  `json:"chain_xtime6"`
+	ChainXtime7      string  `json:"chain_xtime7"`
+	ChainXtime8      string  `json:"chain_xtime8"`
+	ChainXtime9      string  `json:"chain_xtime9"`
+	ChainXtime10     string  `json:"chain_xtime10"`
+	ChainXtime11     string  `json:"chain_xtime11"`
+	ChainXtime12     string  `json:"chain_xtime12"`
+	ChainXtime13     string  `json:"chain_xtime13"`
+	ChainXtime14     string  `json:"chain_xtime14"`
+	ChainXtime15     string  `json:"chain_xtime15"`
+	ChainXtime16     string  `json:"chain_xtime16"`
 	// s7
 	Baud      int     `json:"baud"`
 	AsicCount int     `json:"asic_count"`
