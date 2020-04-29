@@ -52,8 +52,7 @@ func (miner *CGMiner) sendCommand(conn net.Conn, command, argument string) ([]by
 	return bytes.TrimRight(result, "\x00"), nil
 }
 
-// Call sends raw request and returns raw response
-func (miner *CGMiner) Call(ctx context.Context, command, argument string) ([]byte, error) {
+func (miner *CGMiner) commandCtx(ctx context.Context, command, argument string) ([]byte, error) {
 	conn, err := miner.connectContext(ctx)
 	if err != nil {
 		return nil, err
@@ -94,7 +93,7 @@ func (miner *CGMiner) Summary() (*Summary, error) {
 
 // SummaryContext returns basic information on the miner. See the Summary struct.
 func (miner *CGMiner) SummaryContext(ctx context.Context) (*Summary, error) {
-	result, err := miner.Call(ctx, "summary", "")
+	result, err := miner.commandCtx(ctx, "summary", "")
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +122,7 @@ func (miner *CGMiner) Stats() (Stats, error) {
 
 // StatsContext returns basic information on the miner. See the Stats struct.
 func (miner *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
-	result, err := miner.Call(ctx, "stats", "")
+	result, err := miner.commandCtx(ctx, "stats", "")
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +148,7 @@ func (miner *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
 
 // PoolsContext returns a slice of Pool structs, one per pool.
 func (miner *CGMiner) PoolsContext(ctx context.Context) ([]Pool, error) {
-	result, err := miner.Call(ctx, "pools", "")
+	result, err := miner.commandCtx(ctx, "pools", "")
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +175,7 @@ func (miner *CGMiner) AddPoolCtx(ctx context.Context, url, username, password st
 	// TODO: Don't allow adding a pool that's already in the pool list
 	// TODO: Escape commas in the URL, username, and password
 	parameter := fmt.Sprintf("%s,%s,%s", url, username, password)
-	result, err := miner.Call(ctx, "addpool", parameter)
+	result, err := miner.commandCtx(ctx, "addpool", parameter)
 	if err != nil {
 		return err
 	}
