@@ -11,6 +11,12 @@ import (
 	"time"
 )
 
+// StatusGetter is generic command response which provides execution status
+type StatusGetter interface {
+	// GetStatus returns status
+	GetStatus() []Status
+}
+
 func (miner *CGMiner) checkStatus(statuses []Status) error {
 	for _, status := range statuses {
 		switch status.Status {
@@ -50,6 +56,26 @@ func (miner *CGMiner) sendCommand(conn net.Conn, command, argument string) ([]by
 		return nil, err
 	}
 	return bytes.TrimRight(result, "\x00"), nil
+}
+
+// Call calls API function and writes result to output or returns error
+//
+// Output should implement StatusGetter interface to validate command Status (see GenericResponse)
+func (miner *CGMiner) Call(ctx context.Context, command, argument string, out StatusGetter) error {
+	result, err := miner.commandCtx(ctx, command, argument)
+	if err != nil {
+		return fmt.Errorf("cgminer: %q - %w", command, err)
+	}
+
+	if err = json.Unmarshal(result, out); err != nil {
+		return fmt.Errorf("cgminer: %q - %w", command, err)
+	}
+
+	if err = miner.checkStatus(out.GetStatus()); err != nil {
+		return fmt.Errorf("cgminer: %q - %w", command, err)
+	}
+
+	return nil
 }
 
 func (miner *CGMiner) commandCtx(ctx context.Context, command, argument string) ([]byte, error) {

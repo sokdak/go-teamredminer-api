@@ -21,6 +21,11 @@ type GenericResponse struct {
 	Status []Status `json:"STATUS"`
 }
 
+// GetStatus implements StatusGetter interface
+func (r GenericResponse) GetStatus() []Status {
+	return r.Status
+}
+
 // VersionResponse - returned by "version" command
 type VersionResponse struct {
 	GenericResponse
