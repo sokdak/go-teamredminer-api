@@ -2,6 +2,11 @@ package cgminer
 
 import "encoding/json"
 
+// Generic returns generic stats
+func (s *GenericStats) Generic() *GenericStats {
+	return s
+}
+
 // S9 - get struct fields only related to S9
 func (s *GenericStats) S9() (*StatsS9, error) {
 	raw, _ := json.Marshal(s)
