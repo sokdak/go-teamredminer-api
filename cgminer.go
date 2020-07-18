@@ -58,7 +58,7 @@ func (c *CGMiner) CallContext(ctx context.Context, cmd Command, out AbstractResp
 	}
 
 	defer conn.Close()
-	conn.SetDeadline(time.Now().Add(c.Timeout))
+	_ = conn.SetDeadline(time.Now().Add(c.Timeout))
 	return c.Transport.SendCommand(conn, cmd, out)
 }
 

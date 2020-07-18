@@ -50,14 +50,15 @@ func mockTCPServer(ctx context.Context, ip string, port int, payload []byte) {
 				log.Fatal(err)
 			}
 			go handleConn(a.conn, payload)
-		default:
+		default: //nolint
 		}
 	}
 }
 
 func handleConn(conn net.Conn, payload []byte) {
-	conn.Write(payload)
-	conn.Close()
+	// nolint
+	_, _ = conn.Write(payload)
+	_ = conn.Close()
 }
 
 func getPort() int {
