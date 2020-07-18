@@ -2,6 +2,7 @@ package cgminer
 
 // Stats is a generic stats interface, returned by method Stats()
 type Stats interface {
+	Generic() *GenericStats
 	S7() (*StatsS7, error)
 	S9() (*StatsS9, error)
 	D3() (*StatsD3, error)

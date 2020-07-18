@@ -17,7 +17,7 @@ import (
 const (
 	proto        = "tcp"
 	ip           = "127.0.0.1"
-	minerTimeout = 1
+	minerTimeout = 5 * time.Second
 )
 
 type accepted struct {
@@ -29,7 +29,7 @@ func wait(amout int) {
 	time.Sleep(time.Duration(amout) * 10 * time.Millisecond)
 }
 
-func mockTCPServer(ctx context.Context, ip string, port int64, payload []byte) {
+func mockTCPServer(ctx context.Context, ip string, port int, payload []byte) {
 	addr := fmt.Sprintf("%s:%d", ip, port)
 	listener, err := net.Listen(proto, addr)
 	if err != nil {
@@ -50,22 +50,23 @@ func mockTCPServer(ctx context.Context, ip string, port int64, payload []byte) {
 				log.Fatal(err)
 			}
 			go handleConn(a.conn, payload)
-		default:
+		default: //nolint
 		}
 	}
 }
 
 func handleConn(conn net.Conn, payload []byte) {
-	conn.Write(payload)
-	conn.Close()
+	// nolint
+	_, _ = conn.Write(payload)
+	_ = conn.Close()
 }
 
-func getPort() int64 {
+func getPort() int {
 	port, err := freeport.GetFreePort()
 	if err != nil {
 		log.Fatal(err)
 	}
-	return int64(port)
+	return port
 }
 
 func getFixture(filename string) []byte {
@@ -82,6 +83,10 @@ func TestConnFailed(t *testing.T) {
 	_, err := miner.Version()
 	if err == nil {
 		t.Fatal("must throw err: connection refused")
+	}
+
+	if _, ok := err.(ConnectError); !ok {
+		t.Fatalf("expected ConnectError type, got %T", err)
 	}
 }
 
@@ -501,22 +506,22 @@ func TestStats(t *testing.T) {
 		ChainHW14:             0,
 		ChainHW15:             0,
 		ChainHW16:             0,
-		ChainRate1:            "",
-		ChainRate2:            "",
-		ChainRate3:            "",
-		ChainRate4:            "",
-		ChainRate5:            "",
-		ChainRate6:            "4536.24",
-		ChainRate7:            "4545.53",
-		ChainRate8:            "4548.77",
-		ChainRate9:            "",
-		ChainRate10:           "",
-		ChainRate11:           "",
-		ChainRate12:           "",
-		ChainRate13:           "",
-		ChainRate14:           "",
-		ChainRate15:           "",
-		ChainRate16:           "",
+		ChainRate1:            0,
+		ChainRate2:            0,
+		ChainRate3:            0,
+		ChainRate4:            0,
+		ChainRate5:            0,
+		ChainRate6:            4536.24,
+		ChainRate7:            4545.53,
+		ChainRate8:            4548.77,
+		ChainRate9:            0,
+		ChainRate10:           0,
+		ChainRate11:           0,
+		ChainRate12:           0,
+		ChainRate13:           0,
+		ChainRate14:           0,
+		ChainRate15:           0,
+		ChainRate16:           0,
 		ChainXtime6:           "{X49=5}",
 		ChainXtime7:           "{}",
 		ChainXtime8:           "{}",
@@ -707,22 +712,22 @@ func TestStats2BoardsS9(t *testing.T) {
 		ChainHW14:             0,
 		ChainHW15:             0,
 		ChainHW16:             0,
-		ChainRate1:            "",
-		ChainRate2:            "",
-		ChainRate3:            "",
-		ChainRate4:            "",
-		ChainRate5:            "",
-		ChainRate6:            "4524.63",
-		ChainRate7:            "4549.39",
-		ChainRate8:            "0.00000",
-		ChainRate9:            "",
-		ChainRate10:           "",
-		ChainRate11:           "",
-		ChainRate12:           "",
-		ChainRate13:           "",
-		ChainRate14:           "",
-		ChainRate15:           "",
-		ChainRate16:           "",
+		ChainRate1:            0,
+		ChainRate2:            0,
+		ChainRate3:            0,
+		ChainRate4:            0,
+		ChainRate5:            0,
+		ChainRate6:            4524.63,
+		ChainRate7:            4549.39,
+		ChainRate8:            0,
+		ChainRate9:            0,
+		ChainRate10:           0,
+		ChainRate11:           0,
+		ChainRate12:           0,
+		ChainRate13:           0,
+		ChainRate14:           0,
+		ChainRate15:           0,
+		ChainRate16:           0,
 		ChainXtime6:           "{X10=7}",
 		ChainXtime7:           "{}",
 		ChainXtime8:           "{X0=1,X1=1,X2=1,X3=1,X4=1,X5=1,X6=1,X7=1,X8=1,X9=1,X10=1,X11=1,X12=1,X13=1,X14=1,X15=1,X16=1,X17=1,X18=1,X19=1,X20=1,X21=1,X22=1,X23=1,X24=1,X25=1,X26=1,X27=1,X28=1,X29=1,X30=1,X31=1,X32=1,X33=1,X34=1,X35=1,X36=1,X37=1,X38=1,X39=1,X40=1,X41=1,X42=1,X43=1,X44=1,X45=1,X46=1,X47=1,X48=1,X49=1,X50=1,X51=1,X52=1,X53=1,X54=1,X55=1,X56=1,X57=1,X58=1,X59=1,X60=1,X61=1,X62=1}",
