@@ -1,5 +1,6 @@
 # CGMiner API for Go #
 
+[![Build Status](https://travis-ci.org/x1unix/go-cgminer-api.svg?branch=master)](https://travis-ci.org/x1unix/go-cgminer-api) 
 [![Go Report Card](https://goreportcard.com/badge/github.com/x1unix/go-cgminer-api)](https://goreportcard.com/report/github.com/x1unix/go-cgminer-api) 
 [![MIT Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/mit-license) 
 

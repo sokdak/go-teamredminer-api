@@ -1,0 +1,17 @@
+language: go
+
+go:
+  - "1.14.x"
+
+branches:
+  only:
+    - master
+    - dev
+env:
+  - GO111MODULE=on
+
+install: true
+
+script:
+  - go vet ./...
+  - go test ./...
