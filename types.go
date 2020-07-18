@@ -1,18 +1,23 @@
 package cgminer
 
 import (
-	"time"
+	"fmt"
 )
 
-// CGMiner - server deps
-type CGMiner struct {
-	server  string
-	timeout time.Duration
-}
-
-type commandRequest struct {
+type Command struct {
 	Command   string `json:"command"`
 	Parameter string `json:"parameter,omitempty"`
+}
+
+func NewCommandWithoutParameter(name string) Command {
+	return Command{Command: name}
+}
+
+func NewCommand(name, parameter string) Command {
+	return Command{
+		Command:   name,
+		Parameter: parameter,
+	}
 }
 
 // GenericResponse - default struct for all responses
@@ -21,9 +26,17 @@ type GenericResponse struct {
 	Status []Status `json:"STATUS"`
 }
 
-// GetStatus implements StatusGetter interface
-func (r GenericResponse) GetStatus() []Status {
-	return r.Status
+// HasError implements AbstractResponse interface
+func (r GenericResponse) HasError() error {
+	for _, status := range r.Status {
+		switch status.Status {
+		case "E":
+			return fmt.Errorf("API returned error: Code: %d, Msg: '%s', Description: '%s'", status.Code, status.Msg, status.Description)
+		case "F":
+			return fmt.Errorf("API returned FATAL error: Code: %d, Msg: '%s', Description: '%s'", status.Code, status.Msg, status.Description)
+		}
+	}
+	return nil
 }
 
 // VersionResponse - returned by "version" command
