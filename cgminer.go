@@ -7,6 +7,12 @@ import (
 	"time"
 )
 
+// Dialer is abstract network dialer
+type Dialer interface {
+	DialContext(ctx context.Context, network, address string) (net.Conn, error)
+	Dial(network, address string) (net.Conn, error)
+}
+
 // ConnectError represents API connection error
 type ConnectError struct {
 	err error
@@ -29,7 +35,7 @@ type CGMiner struct {
 	Timeout time.Duration
 
 	// Dialer is network dialer
-	Dialer net.Dialer
+	Dialer Dialer
 
 	// Transport is request and response decoder.
 	//
@@ -68,7 +74,7 @@ func NewCGMiner(hostname string, port int, timeout time.Duration) *CGMiner {
 		Address:   fmt.Sprintf("%s:%d", hostname, port),
 		Timeout:   timeout,
 		Transport: NewJSONTransport(),
-		Dialer: net.Dialer{
+		Dialer: &net.Dialer{
 			Timeout: timeout,
 		},
 	}
