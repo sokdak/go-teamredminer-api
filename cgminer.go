@@ -18,10 +18,17 @@ type ConnectError struct {
 	err error
 }
 
+// NewConnectError wraps error as ConnectError
+func NewConnectError(baseError error) ConnectError {
+	return ConnectError{err: baseError}
+}
+
+// Error implements error
 func (err ConnectError) Error() string {
 	return fmt.Sprintf("connect error (%s)", err.err)
 }
 
+// Unwrap implements error
 func (err ConnectError) Unwrap() error {
 	return err.err
 }
