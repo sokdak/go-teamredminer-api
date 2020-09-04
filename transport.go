@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"io"
 	"net"
 )
 
@@ -42,7 +43,7 @@ func (t JSONTransport) SendCommand(conn net.Conn, cmd Command, out AbstractRespo
 	}
 
 	result, err := bufio.NewReader(conn).ReadBytes(0x00)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return err
 	}
 
