@@ -2,6 +2,7 @@ package cgminer
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -27,12 +28,12 @@ func (n Number) Float64() float64 {
 
 // Int64 returns the number as an int64.
 func (n Number) Int64() int64 {
-	return int64(n)
+	return int64(n.Int())
 }
 
 // Int returns the number as an int.
 func (n Number) Int() int {
-	return int(n)
+	return int(math.Round(float64(n)))
 }
 
 func (n *Number) UnmarshalJSON(b []byte) error {
