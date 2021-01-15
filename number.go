@@ -33,6 +33,9 @@ func (n Number) Int64() int64 {
 
 // Int returns the number as an int.
 func (n Number) Int() int {
+	if n == 0 {
+		return 0
+	}
 	return int(math.Round(float64(n)))
 }
 

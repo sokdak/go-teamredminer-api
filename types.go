@@ -172,56 +172,56 @@ type GenericStats struct {
 	Temp4_3 int16 `json:"temp4_3"`
 	Temp4_4 int16 `json:"temp4_4"`
 	// interfcace{} - because S7 has valid value, but all others have quoted value
-	Ghs5s      interface{} `json:"GHS 5s"`
-	GhsAverage float64     `json:"GHS av"`
-	ChainHW1   int         `json:"chain_hw1"`
-	ChainHW2   int         `json:"chain_hw2"`
-	ChainHW3   int         `json:"chain_hw3"`
-	ChainHW4   int         `json:"chain_hw4"`
-	ChainHW5   int         `json:"chain_hw5"`
-	ChainHW6   int         `json:"chain_hw6"`
-	ChainHW7   int         `json:"chain_hw7"`
-	ChainHW8   int         `json:"chain_hw8"`
-	ChainHW9   int         `json:"chain_hw9"`
-	ChainHW10  int         `json:"chain_hw10"`
-	ChainHW11  int         `json:"chain_hw11"`
-	ChainHW12  int         `json:"chain_hw12"`
-	ChainHW13  int         `json:"chain_hw13"`
-	ChainHW14  int         `json:"chain_hw14"`
-	ChainHW15  int         `json:"chain_hw15"`
-	ChainHW16  int         `json:"chain_hw16"`
-	ChainAcs1  string      `json:"chain_acs1"`
-	ChainAcs2  string      `json:"chain_acs2"`
-	ChainAcs3  string      `json:"chain_acs3"`
-	ChainAcs4  string      `json:"chain_acs4"`
-	ChainAcs5  string      `json:"chain_acs5"`
-	ChainAcs6  string      `json:"chain_acs6"`
-	ChainAcs7  string      `json:"chain_acs7"`
-	ChainAcs8  string      `json:"chain_acs8"`
-	ChainAcs9  string      `json:"chain_acs9"`
-	ChainAcs10 string      `json:"chain_acs10"`
-	ChainAcs11 string      `json:"chain_acs11"`
-	ChainAcs12 string      `json:"chain_acs12"`
-	ChainAcs13 string      `json:"chain_acs13"`
-	ChainAcs14 string      `json:"chain_acs14"`
-	ChainAcs15 string      `json:"chain_acs15"`
-	ChainAcs16 string      `json:"chain_acs16"`
-	ChainAcn1  int         `json:"chain_acn1"`
-	ChainAcn2  int         `json:"chain_acn2"`
-	ChainAcn3  int         `json:"chain_acn3"`
-	ChainAcn4  int         `json:"chain_acn4"`
-	ChainAcn5  int         `json:"chain_acn5"`
-	ChainAcn6  int         `json:"chain_acn6"`
-	ChainAcn7  int         `json:"chain_acn7"`
-	ChainAcn8  int         `json:"chain_acn8"`
-	ChainAcn9  int         `json:"chain_acn9"`
-	ChainAcn10 int         `json:"chain_acn10"`
-	ChainAcn11 int         `json:"chain_acn11"`
-	ChainAcn12 int         `json:"chain_acn12"`
-	ChainAcn13 int         `json:"chain_acn13"`
-	ChainAcn14 int         `json:"chain_acn14"`
-	ChainAcn15 int         `json:"chain_acn15"`
-	ChainAcn16 int         `json:"chain_acn16"`
+	Ghs5s      Number  `json:"GHS 5s"`
+	GhsAverage float64 `json:"GHS av"`
+	ChainHW1   int     `json:"chain_hw1"`
+	ChainHW2   int     `json:"chain_hw2"`
+	ChainHW3   int     `json:"chain_hw3"`
+	ChainHW4   int     `json:"chain_hw4"`
+	ChainHW5   int     `json:"chain_hw5"`
+	ChainHW6   int     `json:"chain_hw6"`
+	ChainHW7   int     `json:"chain_hw7"`
+	ChainHW8   int     `json:"chain_hw8"`
+	ChainHW9   int     `json:"chain_hw9"`
+	ChainHW10  int     `json:"chain_hw10"`
+	ChainHW11  int     `json:"chain_hw11"`
+	ChainHW12  int     `json:"chain_hw12"`
+	ChainHW13  int     `json:"chain_hw13"`
+	ChainHW14  int     `json:"chain_hw14"`
+	ChainHW15  int     `json:"chain_hw15"`
+	ChainHW16  int     `json:"chain_hw16"`
+	ChainAcs1  string  `json:"chain_acs1"`
+	ChainAcs2  string  `json:"chain_acs2"`
+	ChainAcs3  string  `json:"chain_acs3"`
+	ChainAcs4  string  `json:"chain_acs4"`
+	ChainAcs5  string  `json:"chain_acs5"`
+	ChainAcs6  string  `json:"chain_acs6"`
+	ChainAcs7  string  `json:"chain_acs7"`
+	ChainAcs8  string  `json:"chain_acs8"`
+	ChainAcs9  string  `json:"chain_acs9"`
+	ChainAcs10 string  `json:"chain_acs10"`
+	ChainAcs11 string  `json:"chain_acs11"`
+	ChainAcs12 string  `json:"chain_acs12"`
+	ChainAcs13 string  `json:"chain_acs13"`
+	ChainAcs14 string  `json:"chain_acs14"`
+	ChainAcs15 string  `json:"chain_acs15"`
+	ChainAcs16 string  `json:"chain_acs16"`
+	ChainAcn1  int     `json:"chain_acn1"`
+	ChainAcn2  int     `json:"chain_acn2"`
+	ChainAcn3  int     `json:"chain_acn3"`
+	ChainAcn4  int     `json:"chain_acn4"`
+	ChainAcn5  int     `json:"chain_acn5"`
+	ChainAcn6  int     `json:"chain_acn6"`
+	ChainAcn7  int     `json:"chain_acn7"`
+	ChainAcn8  int     `json:"chain_acn8"`
+	ChainAcn9  int     `json:"chain_acn9"`
+	ChainAcn10 int     `json:"chain_acn10"`
+	ChainAcn11 int     `json:"chain_acn11"`
+	ChainAcn12 int     `json:"chain_acn12"`
+	ChainAcn13 int     `json:"chain_acn13"`
+	ChainAcn14 int     `json:"chain_acn14"`
+	ChainAcn15 int     `json:"chain_acn15"`
+	ChainAcn16 int     `json:"chain_acn16"`
 	// Number because we cannot parse empty string "" to float
 	// S9(), D3() and other interface methods will correct represent this value as float32
 	ChainRate1       Number  `json:"chain_rate1"`
