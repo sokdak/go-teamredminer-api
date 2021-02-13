@@ -21,13 +21,18 @@ type AbstractResponse interface {
 //
 // Use corresponding transport for specific case.
 type Transport interface {
-	// SendCommand encodes passed command and encodes response with error check.
+	// SendCommand encodes and sends passed command
+	SendCommand(conn net.Conn, cmd Command) error
+
+	// DecodeResponse reads and decodes response from CGMiner API connection.
 	//
 	// Response destination is passed to "out" and should be pointer.
 	//
 	// nil "out" value can be passed if command doesn't returns any response.
-	SendCommand(conn net.Conn, cmd Command, out AbstractResponse) error
+	DecodeResponse(conn net.Conn, cmd Command, out AbstractResponse) error
 }
+
+var _ Transport = (*JSONTransport)(nil)
 
 type JSONTransport struct{}
 
@@ -37,31 +42,31 @@ func NewJSONTransport() JSONTransport {
 }
 
 // SendCommand implements Transport interface
-func (t JSONTransport) SendCommand(conn net.Conn, cmd Command, out AbstractResponse) error {
-	if err := json.NewEncoder(conn).Encode(cmd); err != nil {
-		return err
-	}
+func (t JSONTransport) SendCommand(conn net.Conn, cmd Command) error {
+	return json.NewEncoder(conn).Encode(cmd)
+}
 
-	result, err := bufio.NewReader(conn).ReadBytes(0x00)
+// DecodeResponse implements Transport interface
+func (t JSONTransport) DecodeResponse(conn net.Conn, cmd Command, out AbstractResponse) error {
+	rsp, err := readWithNullTerminator(conn)
 	if err != nil && err != io.EOF {
 		return err
 	}
 
-	trimmed := bytes.TrimRight(result, "\x00")
 	// fix incorrect json response from miner ("}{")
 	if cmd.Command == "stats" {
-		trimmed = bytes.Replace(trimmed, []byte("}{"), []byte(","), 1)
+		rsp = bytes.Replace(rsp, []byte("}{"), []byte(","), 1)
 	}
 
 	isEmpty := out == nil
 	if isEmpty {
-		if len(trimmed) == 0 {
+		if len(rsp) == 0 {
 			return nil
 		}
 		out = new(GenericResponse)
 	}
 
-	if err := json.Unmarshal(trimmed, out); err != nil {
+	if err := json.Unmarshal(rsp, out); err != nil {
 		if isEmpty {
 			// just omit error if consumer passed empty response output
 			return nil
@@ -70,4 +75,15 @@ func (t JSONTransport) SendCommand(conn net.Conn, cmd Command, out AbstractRespo
 	}
 
 	return out.HasError()
+}
+
+// readWithNullTerminator reads cgminer response, but stops
+// at null terminator (0x00)
+func readWithNullTerminator(r io.Reader) ([]byte, error) {
+	result, err := bufio.NewReader(r).ReadBytes(0x00)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.TrimRight(result, "\x00"), nil
 }

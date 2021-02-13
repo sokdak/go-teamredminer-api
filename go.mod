@@ -4,5 +4,5 @@ go 1.14
 
 require (
 	github.com/go-test/deep v1.0.1
-	github.com/phayes/freeport v0.0.0-20171002181615-b8543db493a5
+	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2
 )

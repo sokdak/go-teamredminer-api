@@ -72,7 +72,29 @@ func (c *CGMiner) CallContext(ctx context.Context, cmd Command, out AbstractResp
 
 	defer conn.Close()
 	_ = conn.SetDeadline(time.Now().Add(c.Timeout))
-	return c.Transport.SendCommand(conn, cmd, out)
+	if err = c.Transport.SendCommand(conn, cmd); err != nil {
+		return err
+	}
+
+	return c.Transport.DecodeResponse(conn, cmd, out)
+}
+
+// RawCall sends command to CGMiner API and returns raw response as slice of bytes.
+//
+// Response error check should be performed manually.
+func (c *CGMiner) RawCall(ctx context.Context, cmd Command) ([]byte, error) {
+	conn, err := c.Dialer.DialContext(ctx, "tcp", c.Address)
+	if err != nil {
+		return nil, ConnectError{err: err}
+	}
+
+	defer conn.Close()
+	_ = conn.SetDeadline(time.Now().Add(c.Timeout))
+	if err = c.Transport.SendCommand(conn, cmd); err != nil {
+		return nil, err
+	}
+
+	return readWithNullTerminator(conn)
 }
 
 // NewCGMiner returns a CGMiner client with JSON API transport
