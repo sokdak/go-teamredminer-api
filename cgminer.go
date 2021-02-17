@@ -73,7 +73,7 @@ func (c *CGMiner) CallContext(ctx context.Context, cmd Command, out AbstractResp
 	defer conn.Close()
 	_ = conn.SetDeadline(time.Now().Add(c.Timeout))
 	if err = c.Transport.SendCommand(conn, cmd); err != nil {
-		return err
+		return fmt.Errorf("failed to send cgminer command: %w", err)
 	}
 
 	return c.Transport.DecodeResponse(conn, cmd, out)

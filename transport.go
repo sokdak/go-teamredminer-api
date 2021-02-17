@@ -81,7 +81,7 @@ func (t JSONTransport) DecodeResponse(conn net.Conn, cmd Command, out AbstractRe
 // at null terminator (0x00)
 func readWithNullTerminator(r io.Reader) ([]byte, error) {
 	result, err := bufio.NewReader(r).ReadBytes(0x00)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return nil, err
 	}
 
