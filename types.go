@@ -670,7 +670,7 @@ type StatsS9 struct {
 // Summary - miner summary
 type Summary struct {
 	Accepted              int64
-	BestShare             int64   `json:"Best Share"`
+	BestShare             float64 `json:"Best Share"`
 	DeviceHardwarePercent float64 `json:"Device Hardware%"`
 	DeviceRejectedPercent float64 `json:"Device Rejected%"`
 	DifficultyAccepted    float64 `json:"Difficulty Accepted"`
