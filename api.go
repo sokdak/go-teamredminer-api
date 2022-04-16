@@ -81,9 +81,10 @@ func (c *CGMiner) StatsContext(ctx context.Context) (Stats, error) {
 	if len(resp.Stats) < 1 {
 		return nil, errors.New("no stats in JSON response")
 	}
-	if len(resp.Stats) > 1 {
-		return nil, errors.New("too many stats in JSON response")
-	}
+	// we don't need to check stats has over 2 slices
+	//if len(resp.Stats) > 1 {
+	//	return nil, errors.New("too many stats in JSON response")
+	//}
 	return &resp.Stats[0], nil
 }
 
