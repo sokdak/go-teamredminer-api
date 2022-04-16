@@ -142,6 +142,21 @@ func (c *CGMiner) SwitchPool(pool *Pool) error {
 	return c.Call(NewCommand("switchpool", strconv.FormatInt(pool.Pool, 10)), nil)
 }
 
+// DevDetailContext returns a slice of DeviceDetail structs.
+func (c *CGMiner) DevDetailContext(ctx context.Context) ([]DeviceDetail, error) {
+	resp := new(deviceDetailResponse)
+	if err := c.CallContext(ctx, NewCommandWithoutParameter("devdetails"), resp); err != nil {
+		return nil, err
+	}
+
+	return resp.DevDetails, nil
+}
+
+// DevDetails returns a slice of DeviceDetail structs, one per pool.
+func (c *CGMiner) DevDetails() ([]DeviceDetail, error) {
+	return c.DevDetailContext(context.Background())
+}
+
 func (c *CGMiner) Restart() error {
 	return c.Call(NewCommandWithoutParameter("restart"), nil)
 }

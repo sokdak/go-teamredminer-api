@@ -707,14 +707,18 @@ type Devs struct {
 	Enabled             string
 	Status              string
 	Temperature         float64
+	TemperatureJunction float64 `json:"TemperatureJnct,omitempty"`
+	TemperatureMemory   float64 `json:"TemperatureMem,omitempty"`
 	FanSpeed            int     `json:"Fan Speed"`
 	FanPercent          int64   `json:"Fan Percent"`
 	GPUClock            int64   `json:"GPU Clock"`
 	MemoryClock         int64   `json:"Memory Clock"`
 	GPUVoltage          float64 `json:"GPU Voltage"`
+	PowerConsumption    float64 `json:"GPU Power"`
 	Powertune           int64
 	MHSav               float64 `json:"MHS av"`
 	MHS5s               float64 `json:"MHS 5s"`
+	MHS30s              float64 `json:"MHS 30s"`
 	Accepted            int64
 	Rejected            int64
 	HardwareErrors      int64 `json:"Hardware Errors"`
@@ -731,6 +735,8 @@ type Devs struct {
 	DeviceHardware      float64 `json:"Device Hardware%"`
 	DeviceRejected      float64 `json:"Device Rejected%"`
 	DeviceElapsed       int64   `json:"Device Elapsed"`
+	AcceptedShares      int     `json:"Accepted"`
+	RejectedShares      int     `json:"Rejected"`
 }
 
 // Pool - get working pools
@@ -767,6 +773,14 @@ type Pool struct {
 	Works               int64
 }
 
+// DeviceDetail - get device detail info
+type DeviceDetail struct {
+	Id         int    `json:"ID"`
+	Model      string `json:"Model"`
+	Kernel     string `json:"Kernel"`
+	DevicePath string `json:"Device Path"`
+}
+
 type statsResponse struct {
 	GenericResponse
 	Stats []GenericStats `json:"STATS"`
@@ -785,4 +799,9 @@ type devsResponse struct {
 type poolsResponse struct {
 	GenericResponse
 	Pools []Pool `json:"POOLS"`
+}
+
+type deviceDetailResponse struct {
+	GenericResponse
+	DevDetails []DeviceDetail `json:"DEVDETAILS"`
 }
