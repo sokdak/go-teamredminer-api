@@ -743,7 +743,7 @@ type Devs struct {
 type Pool struct {
 	Accepted            int64
 	BestShare           Number  `json:"Best Share"`
-	Diff1Shares         int64   `json:"Diff1 Shares"`
+	Diff1Shares         float64 `json:"Diff1 Shares"`
 	DifficultyAccepted  float64 `json:"Difficulty Accepted"`
 	DifficultyRejected  float64 `json:"Difficulty Rejected"`
 	DifficultyStale     float64 `json:"Difficulty Stale"`
