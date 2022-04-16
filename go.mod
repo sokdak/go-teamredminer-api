@@ -1,4 +1,4 @@
-module github.com/x1unix/go-cgminer-api
+module github.com/sokdak/go-teamredminer-api
 
 go 1.14
 
