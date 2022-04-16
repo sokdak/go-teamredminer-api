@@ -753,7 +753,7 @@ type Pool struct {
 	HasGBT              bool    `json:"Has GBT"`
 	HasStratum          bool    `json:"Has Stratum"`
 	LastShareDifficulty float64 `json:"Last Share Difficulty"`
-	LastShareTime       string  `json:"Last Share Time"`
+	LastShareTime       float64 `json:"Last Share Time,omitempty"`
 	LongPoll            string  `json:"Long Poll"`
 	Pool                int64   `json:"POOL"`
 	PoolRejectedPercent float64 `json:"Pool Rejected%"`
